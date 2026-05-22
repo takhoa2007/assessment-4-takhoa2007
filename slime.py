@@ -9,21 +9,23 @@ This is my own work as defined by the Adelaide University's Academic Misconduct 
 """
 """ This is an abstract class for whole types of slime """
 
-import random
+from exceptions import InvalidSizeError, InvalidVolatilityError
 from abc import ABC, abstractmethod
 import math
-from exceptions import InvalidSizeError,InvalidVolatilityError
+import random
+
 
 class Slime(ABC):
     """Abstract class representing a volatile slime entity """
-    # Initial value 
-    __id_counter = 0 #Class-level counter used generate unique sequential IDS.
+    # Initial value
+    # Class-level counter used generate unique sequential IDS.
+    __id_counter = 0
     INITIAL_POWER = 5.0
 
-    def __init__(self,name, size):
+    def __init__(self, name, size):
         """ Initialise a new Slime with a unique ID and random volatility"""
         Slime.__id_counter += 1
-        self.__id = f"SLM-{Slime.__id_counter:03d}" 
+        self.__id = f"SLM-{Slime.__id_counter:03d}"
         self.__name = name
         self.__size = size
         self.__volatility_level = random.randint(0, 10)
@@ -37,10 +39,10 @@ class Slime(ABC):
         return self.__name
 
     def set_name(self, name) -> None:
-        #Raise TypeError: If value is not a string.
+        # Raise TypeError: If value is not a string.
         if not isinstance(name, str):
             raise TypeError("Name must be a string.")
-        #Raise ValueError: If value is an empty or whitespace-only string.
+        # Raise ValueError: If value is an empty or whitespace-only string.
         if not name.strip():
             raise ValueError("Name must not be empty.")
         self.__name = name
@@ -53,25 +55,27 @@ class Slime(ABC):
         # Raises TypeError: If value is not a numeric type (int or float).
         if not isinstance(size, (int, float)):
             raise TypeError("Must be a numeric value.")
-        #Raise InvalidSizeError: If value is outside the range 5.0–200.0.
+        # Raise InvalidSizeError: If value is outside the range 5.0–200.0.
         if not (5.0 <= size <= 200):
-            raise InvalidSizeError(f"Size must be between 5.0 and 200.0 cm, got {size}.")
+            raise InvalidSizeError(
+                f"Size must be between 5.0 and 200.0 cm, got {size}.")
         self.__size = float(size)
     size = property(get_size, set_size)
-    
+
     def get_volatility_level(self) -> int:
         return self.__volatility_level
-    
-    def set_volatility_level(self,volatility_level) -> None:
-        #Raise TypeError: If value is not an integer.
+
+    def set_volatility_level(self, volatility_level) -> None:
+        # Raise TypeError: If value is not an integer.
         if not isinstance(volatility_level, int):
             raise TypeError("Volatility level must be an integer.")
-        #Raise InvalidVolatilityError: If value is outside the range 0–10.    
+        # Raise InvalidVolatilityError: If value is outside the range 0–10.
         if not (0 <= volatility_level <= 10):
-            raise InvalidVolatilityError(f"Volatility must be between 0 and 10, got {volatility_level}.")
+            raise InvalidVolatilityError(
+                f"Volatility must be between 0 and 10, got {volatility_level}.")
         self.__volatility_level = volatility_level
     volatility_level = property(get_volatility_level, set_volatility_level)
-    
+
     def get_power(self):
         return self._power
     power = property(get_power)
@@ -82,31 +86,46 @@ class Slime(ABC):
             "volatility_level": self.__volatility_level,
             "name": self.__name,
         }
+
     def calculate_power(self):
+        """Calculate and store power using the formula."""
         attributes = self._get_power_attributes()
         power = self.INITIAL_POWER
         strings = []
         bools = []
 
-        for v in attributes.values():
-            if isinstance(v, bool):
-                bools.append(v)
-            elif isinstance(v, (int, float)):
-                power += v
-            elif isinstance(v, str):
-                strings.append(float(len(v)))
-            elif v is not None:
+        for i in attributes.values():
+            # Booleans are subclasses of int so check them first.
+            if isinstance(i, bool):
+                bools.append(i)
+            elif isinstance(i, (int, float)):
+                power += i
+            elif isinstance(i, str):
+                # Use string length as a numeric proxy.
+                strings.append(float(len(i)))
+            elif i is not None:
+                # Other types add a fixed 1.0.
                 power += 1.0
 
         if strings:
+            # Average string lengths then multiply by pi.
             avg = sum(strings) / len(strings)
             power += avg * math.pi
 
         for flag in bools:
+            # Apply boolean multipliers.
             if flag:
                 power = power * 2.0
             else:
                 power = power / 2.0
-
+        # Rule 6: round and store.
         self.__power = round(power, 2)
         return self.__power
+
+    @abstractmethod
+    def describe_ability(self):
+        pass
+
+    def __str__(self):
+        return (f"[{type(self).__name__}] {self.__id} | {self.__name} | "
+                f"Size: {self.__size:.1f} cm Volatility: {self.__volatility_level} Power: {self.__power:.2f}")
