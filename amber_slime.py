@@ -29,6 +29,7 @@ class Amber(Slime):
         self.__age_preserved = age_preserved
     age_preserved = property(get_age_preserved, set_age_preserved)
 
+    
     def crack_resin(self) -> str:
         """Crack the amber shell to release stored energy.When cracked, the slime is no longer crystallised, its size grows slightly from the energy release, and power is recalculated."""
         self.__is_crystallised = False
@@ -42,4 +43,24 @@ class Amber(Slime):
             f"{self.__name} cracks its amber shell! "
             f"Ancient energy erupts. New size: {self.__size:.1f} cm, "
             f"Power: {self.__power:.2f}."
+        )
+
+    def fossilise(self) -> str:
+        """Harden the amber shell back to a crystallised state.
+
+        Crystallisation reduces size slightly as the slime compresses,
+        then power is recalculated.
+
+        Returns:
+            A description of the fossilisation event.
+        """
+        self.__is_crystallised = True
+
+        new_size = max(self._Slime__size - 5.0, 5.0)
+        self._Slime__size = new_size
+
+        self.calculate_power()
+        return (
+            f"{self._Slime__name} hardens back into crystallised amber. "
+            f"Size: {self._Slime__size:.1f} cm, Power: {self._Slime__power:.2f}."
         )
