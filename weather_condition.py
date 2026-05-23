@@ -45,3 +45,25 @@ class WeatherCondition:
             raise TypeError("is_active must be a boolean.")
         self.__is_active = value
     is_active = property(get_is_active, set_is_active)
+
+    def calculate_energy_output(self) -> float:
+        """Calculate total energy output from storm intensity and electrical charge.
+
+        Returns 0.0 if the storm is not currently active.
+        """
+        if not self.__is_active:
+            return 0.0
+        return round(self.__storm_intensity * self.__electrical_charge, 2)
+
+    def dissipate(self) -> str:
+        # Deactivate this weather condition as the storm passes.
+        self.__is_active = False
+        return "The storm dissipates. Electrical charge fades to zero."
+
+    def __str__(self) -> str:
+        active_str = "active" if self.__is_active else "dissipated"
+        return (
+            f"[WeatherCondition] Intensity: {self.__storm_intensity}/10 | "
+            f"Charge: {self.__electrical_charge:.1f} kV | "
+            f"Status: {active_str}"
+        )
