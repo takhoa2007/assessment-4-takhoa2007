@@ -22,3 +22,26 @@ class WeatherCondition:
             raise ValueError(f"Storm intensity must be between 1 and 10, got {value}.")
         self.__storm_intensity = value
     storm_intensity = property(get_storm_intensity, set_storm_intensity)
+
+    def get_electrical_charge(self) -> float:
+        return self.__electrical_charge
+
+    def set_electrical_charge(self, value: float) -> None:
+        # Raise TypeError: If value is not a numeric type.
+        if not isinstance(value, (int, float)):
+            raise TypeError("Electrical charge must be a numeric value.")
+        # Raise ValueError: If value is negative.
+        if value < 0:
+            raise ValueError("Electrical charge must be non-negative.")
+        self.__electrical_charge = float(value)
+    electrical_charge = property(get_electrical_charge, set_electrical_charge)
+
+    def get_is_active(self) -> bool:
+        return self.__is_active
+
+    def set_is_active(self, value: bool) -> None:
+        # Raise TypeError: If value is not a boolean.
+        if not isinstance(value, bool):
+            raise TypeError("is_active must be a boolean.")
+        self.__is_active = value
+    is_active = property(get_is_active, set_is_active)
