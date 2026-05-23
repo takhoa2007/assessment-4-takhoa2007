@@ -77,7 +77,7 @@ class Slime(ABC):
     volatility_level = property(get_volatility_level, set_volatility_level)
 
     def get_power(self):
-        return self._power
+        return self.__power
     power = property(get_power)
 
     def _get_power_attributes(self):
@@ -127,5 +127,5 @@ class Slime(ABC):
         pass
 
     def __str__(self):
-        return (f"[{type(self).__name__}] {self.__id} | {self.__name} | "
+        return (f"{type(self).__name__}] {self.__id} {self.__name} "
                 f"Size: {self.__size:.1f} cm Volatility: {self.__volatility_level} Power: {self.__power:.2f}")

@@ -12,8 +12,9 @@ class Amber(Slime):
 
     def __init__(self, name, size, age_preserved, is_crystallised):
         super().__init__(name, size)
-        self.__age_preserved = age_preserved
-        self.__is_crystallised = is_crystallised
+        # Using setter to validate the input values
+        self.set_age_preserved(age_preserved)
+        self.set_is_crystallised(is_crystallised)
 
     def get_age_preserved(self) -> int:
         # Return how many year this slime has been preserved.
@@ -29,38 +30,78 @@ class Amber(Slime):
         self.__age_preserved = age_preserved
     age_preserved = property(get_age_preserved, set_age_preserved)
 
-    
+    def get_is_crystallised(self) -> bool:
+        # Return whether the amber shell is fully crystallised.
+        return self.__is_crystallised
+
+    def set_is_crystallised(self, is_crystallised) -> None:
+        if not isinstance(is_crystallised, bool):
+            # Raise TypeError: If value is not a boolean.
+            raise TypeError("is_crystallised must be a boolean.")
+        self.__is_crystallised = is_crystallised
+
+    is_crystallised = property(get_is_crystallised, set_is_crystallised)
+
     def crack_resin(self) -> str:
         """Crack the amber shell to release stored energy.When cracked, the slime is no longer crystallised, its size grows slightly from the energy release, and power is recalculated."""
         self.__is_crystallised = False
 
         # Energy release pushes the slime to grow, capped at the max size.
-        new_size = min(self.__size + 10.0, 200.0)
-        self.__size = new_size
+        new_size = min(self.get_size() + 10.0, 200.0)
+        self._size = new_size
 
         self.calculate_power()
         return (
-            f"{self.__name} cracks its amber shell! "
-            f"Ancient energy erupts. New size: {self.__size:.1f} cm, "
-            f"Power: {self.__power:.2f}."
+            f"{self.get_name()} cracks its amber shell! "
+            f"Ancient energy erupts. New size: {self.get_size():.1f} cm, "
+            f"Power: {self.get_power():.2f}."
         )
 
     def fossilise(self) -> str:
-        """Harden the amber shell back to a crystallised state.
-
-        Crystallisation reduces size slightly as the slime compresses,
-        then power is recalculated.
-
-        Returns:
-            A description of the fossilisation event.
-        """
+        # Harden the amber shell back to a crystallised state. Crystallisation reduces size slightly as the slime compresses, then power is recalculated.
         self.__is_crystallised = True
 
-        new_size = max(self._Slime__size - 5.0, 5.0)
-        self._Slime__size = new_size
+        new_size = max(self.get_size() - 5.0, 5.0)
+        self._size = new_size
 
         self.calculate_power()
         return (
-            f"{self._Slime__name} hardens back into crystallised amber. "
-            f"Size: {self._Slime__size:.1f} cm, Power: {self._Slime__power:.2f}."
+            f"{self.get_name()} hardens back into crystallised amber. "
+            f"Size: {self.get_size():.1f} cm, "
+            f"Power: {self.get_power():.2f}."
+        )
+
+    def describe_ability(self) -> str:
+        # Returns of the slime's aura based on its current shell state.
+        if self.__is_crystallised:
+            state = "crystallised"
+        else:
+            state = "soft"
+        return (
+            f"{self.get_name()} radiates {self.get_age_preserved()}-year-old preserved "
+            f"energy through its {state} amber casing."
+        )
+
+    def _get_numeric_attributes(self) -> list:
+        # Adds age_preserved to the numeric attributes used in the power formula.
+        base = super()._get_numeric_attributes()
+        base.append(self.__age_preserved)
+        return base
+
+    def _get_boolean_attributes(self) -> list:
+        # Adds is_crystallised to the boolean attributes; True doubles power, False halves it.
+        base = super()._get_boolean_attributes()
+        base.append(self.__is_crystallised)
+        return base
+
+    def __str__(self) -> str:
+        # Return a detailed string summary for AmberSlime.
+        if self.__is_crystallised:
+            state = "crystallised"
+        else:
+            state = "soft"
+        return (
+            f"{super().__str__()}\n"
+            f"Age Preserved: {self.__age_preserved} yrs\n"
+            f"Shell: {state}"
         )
