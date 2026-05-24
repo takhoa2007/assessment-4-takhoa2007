@@ -73,3 +73,30 @@ class StormSlime(Slime):
             f"Volatility: {self.__volatility_level}\n"
             f"Power: {self.__power:.2f}."
         )
+    
+    def discharge(self) -> str:
+        # Release half the stored charge to stabilise the slime.
+        released = round(self.__charge_level / 2.0, 2)
+        self.__charge_level = round(self.__charge_level - released, 2)
+        self.__volatility_level = max(self.__volatility_level - 3, 0)
+        self.__is_overcharged = False
+
+        self.calculate_power()
+        return (
+            f"{self.__name} discharges {released:.1f} kV!\n"
+            f"Remaining charge: {self.__charge_level:.1f} kV\n"
+            f"Volatility: {self.__volatility_level} \n"
+            f"Power: {self.__power:.2f}."
+        )
+
+
+    def describe_ability(self) -> str:
+        # Describe StormSlime's charge state including overcharge warning.
+        if self.__is_overcharged:
+            overcharge_str = " OVERCHARGED!" 
+        else: 
+            overcharge_str = ""
+        return (
+            f"{self._name} crackles with {self.__charge_level:.1f} kV of "
+            f"stored lightning energy.{overcharge_str}"
+        )
