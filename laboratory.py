@@ -22,3 +22,21 @@ class Laboratory:
             raise ValueError("Laboratory name must not be empty.")
         self.__name = value
     name = property(get_name, set_name)
+
+    def get_experiments(self) -> dict:
+        # Returns a copy to prevent external mutation of the internal dict.
+        return dict(self.__experiments)
+    experiments = property(get_experiments)
+
+    def add_slime(self, slime) -> None:
+        """Add an existing Slime to the laboratory."""
+        # Raise TypeError: If slime is not a Slime instance.
+        if not isinstance(slime, Slime):
+            raise TypeError("Only Slime instances can be added.")
+        # Raise ValueError: If a slime with the same ID already exists.
+        if slime.get_id() in self.__experiments:
+            raise ValueError(
+                f"A slime with ID {slime.get_id()!r} already exists in this lab."
+            )
+        self.__experiments[slime.get_id()] = slime
+
