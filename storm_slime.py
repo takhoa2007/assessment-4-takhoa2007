@@ -47,3 +47,29 @@ class StormSlime(Slime):
             raise TypeError("weather must be a WeatherCondition or None.")
         self.__weather = weather
     weather = property(get_weather, set_weather)
+
+    def absorb_weather(self, weather) -> str:
+        """Absorb energy from a WeatherCondition to boost charge and power."""
+        if not isinstance(weather, WeatherCondition):
+            raise TypeError("Must provide a WeatherCondition to absorb.")
+        if not weather.get_is_active():
+            raise ValueError("Cannot absorb from an inactive weather event.")
+
+        self.__weather = weather
+        energy = weather.calculate_energy_output()
+        self.__charge_level += energy
+
+        # Higher charge pushes volatility up, capped at 10.
+        volatility_boost = min(int(energy // 20), 10 - self.__volatility_level)
+        self.__volatility_level = min(self.__volatility_level + volatility_boost, 10)
+
+        # Mark overcharged if charge exceeds the safety threshold.
+        self.__is_overcharged = self.__charge_level >= self._OVERCHARGE_THRESHOLD
+
+        self.calculate_power()
+        return (
+            f"{self.get_name()} absorbs {energy:.1f} kV from the storm! \n"
+            f"Charge: {self.__charge_level:.1f} kV \n"
+            f"Volatility: {self.__volatility_level}\n"
+            f"Power: {self.__power:.2f}."
+        )
