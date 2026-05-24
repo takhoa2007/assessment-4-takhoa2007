@@ -13,37 +13,37 @@ class WeatherCondition:
     def get_storm_intensity(self) -> int:
         return self.__storm_intensity
 
-    def set_storm_intensity(self, value: int) -> None:
+    def set_storm_intensity(self, storm_intensity: int) -> None:
         # Raise TypeError: If value is not an integer.
-        if not isinstance(value, int):
+        if not isinstance(storm_intensity, int):
             raise TypeError("Storm intensity must be an integer.")
         # Raise ValueError: If value is outside the range 1–10.
-        if not (1 <= value <= 10):
-            raise ValueError(f"Storm intensity must be between 1 and 10, got {value}.")
-        self.__storm_intensity = value
+        if not (1 <= storm_intensity <= 10):
+            raise ValueError(f"Storm intensity must be between 1 and 10, got {storm_intensity}.")
+        self.__storm_intensity = storm_intensity
     storm_intensity = property(get_storm_intensity, set_storm_intensity)
 
     def get_electrical_charge(self) -> float:
         return self.__electrical_charge
 
-    def set_electrical_charge(self, value: float) -> None:
+    def set_electrical_charge(self, electrical_charge: float) -> None:
         # Raise TypeError: If value is not a numeric type.
-        if not isinstance(value, (int, float)):
+        if not isinstance(electrical_charge, (int, float)):
             raise TypeError("Electrical charge must be a numeric value.")
         # Raise ValueError: If value is negative.
-        if value < 0:
+        if electrical_charge < 0:
             raise ValueError("Electrical charge must be non-negative.")
-        self.__electrical_charge = float(value)
+        self.__electrical_charge = float(electrical_charge)
     electrical_charge = property(get_electrical_charge, set_electrical_charge)
 
     def get_is_active(self) -> bool:
         return self.__is_active
 
-    def set_is_active(self, value: bool) -> None:
+    def set_is_active(self, is_active: bool) -> None:
         # Raise TypeError: If value is not a boolean.
-        if not isinstance(value, bool):
+        if not isinstance(is_active, bool):
             raise TypeError("is_active must be a boolean.")
-        self.__is_active = value
+        self.__is_active = is_active
     is_active = property(get_is_active, set_is_active)
 
     def calculate_energy_output(self) -> float:
