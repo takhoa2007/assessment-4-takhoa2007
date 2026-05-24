@@ -100,3 +100,26 @@ class StormSlime(Slime):
             f"{self._name} crackles with {self.__charge_level:.1f} kV of "
             f"stored lightning energy.{overcharge_str}"
         )
+
+    def _get_power_attributes(self) -> dict:
+        # Adds charge_level, is_overcharged, and optional weather energy to the formula.
+        base = super()._get_power_attributes()
+        base["charge_level"] = self.__charge_level
+        base["is_overcharged"] = self.__is_overcharged
+        if self.__weather is not None:
+            base["weather_energy"] = self.__weather.calculate_energy_output()
+        return base
+
+    def __str__(self) -> str:
+        # Extends the base slime summary with StormSlime-specific fields.
+        overcharge_str = "YES" if self.__is_overcharged else "NO"
+        if self.__weather:
+            weather_str = f"Storm: {self.__weather.get_storm_intensity()}/10"
+        else:
+            weather_str = "No linked storm"
+        return (
+            f"{super().__str__()}\n"
+            f"Charge: {self.__charge_level:.1f} kV \n"
+            f"Overcharged: {overcharge_str} \n"
+            f"{weather_str}"
+        )

@@ -9,7 +9,6 @@ This is my own work as defined by the Adelaide University's Academic Misconduct 
 """
 """ This is an abstract class for whole types of slime """
 
-from exceptions import InvalidSizeError, InvalidVolatilityError
 from abc import ABC, abstractmethod
 import math
 import random
@@ -57,8 +56,7 @@ class Slime(ABC):
             raise TypeError("Must be a numeric value.")
         # Raise InvalidSizeError: If value is outside the range 5.0–200.0.
         if not (5.0 <= size <= 200):
-            raise InvalidSizeError(
-                f"Size must be between 5.0 and 200.0 cm, got {size}.")
+            raise ValueError(f"Size must be between 5.0 and 200.0 cm, got {size}.")
         self.__size = float(size)
     size = property(get_size, set_size)
 
@@ -71,8 +69,7 @@ class Slime(ABC):
             raise TypeError("Volatility level must be an integer.")
         # Raise InvalidVolatilityError: If value is outside the range 0–10.
         if not (0 <= volatility_level <= 10):
-            raise InvalidVolatilityError(
-                f"Volatility must be between 0 and 10, got {volatility_level}.")
+            raise ValueError(f"Volatility must be between 0 and 10, got {volatility_level}.")
         self.__volatility_level = volatility_level
     volatility_level = property(get_volatility_level, set_volatility_level)
 

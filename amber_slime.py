@@ -82,16 +82,11 @@ class Amber(Slime):
             f"energy through its {state} amber casing."
         )
 
-    def _get_numeric_attributes(self) -> list:
-        # Adds age_preserved to the numeric attributes used in the power formula.
-        base = super()._get_numeric_attributes()
-        base.append(self.__age_preserved)
-        return base
-
-    def _get_boolean_attributes(self) -> list:
-        # Adds is_crystallised to the boolean attributes; True doubles power, False halves it.
-        base = super()._get_boolean_attributes()
-        base.append(self.__is_crystallised)
+    def _get_power_attributes(self) -> dict:
+        # Adds age_preserved and is_crystallised to the power formula.
+        base = super()._get_power_attributes()
+        base["age_preserved"] = self.__age_preserved
+        base["is_crystallised"] = self.__is_crystallised
         return base
 
     def __str__(self) -> str:
