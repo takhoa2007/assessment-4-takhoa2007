@@ -3,6 +3,7 @@
 import random
 from slime import Slime
 
+
 class Laboratory:
     """Manages a collection of slime experiments inside the dungeon lab."""
 
@@ -13,6 +14,7 @@ class Laboratory:
 
     def get_name(self) -> str:
         return self.__name
+
     def set_name(self, value) -> None:
         # Raise TypeError: If value is not a string.
         if not isinstance(value, str):
@@ -40,3 +42,27 @@ class Laboratory:
             )
         self.__experiments[slime.get_id()] = slime
 
+    def create_slime(self, slime) -> Slime:
+        """Register a new Slime in the laboratory and return it."""
+        self.add_slime(slime)
+        return slime
+
+    def remove_slime(self, slime_id) -> Slime:
+        """Remove and return the slime with the given ID."""
+        # Raise TypeError: If slime_id is not a string.
+        if not isinstance(slime_id, str):
+            raise TypeError("Slime ID must be a string.")
+        # Raise KeyError: If no slime with that ID exists.
+        if slime_id not in self.__experiments:
+            raise KeyError(f"No slime with ID {slime_id!r} found in the laboratory.")
+        return self.__experiments.pop(slime_id)
+
+    def get_slime(self, slime_id) -> Slime:
+        """Retrieve a slime by its ID without removing it."""
+        # Raise TypeError: If slime_id is not a string.
+        if not isinstance(slime_id, str):
+            raise TypeError("Slime ID must be a string.")
+        # Raise KeyError: If no slime with that ID exists.
+        if slime_id not in self.__experiments:
+            raise KeyError(f"No slime with ID {slime_id!r} found in the laboratory.")
+        return self.__experiments[slime_id]
