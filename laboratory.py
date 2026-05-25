@@ -54,7 +54,8 @@ class Laboratory:
             raise TypeError("Slime ID must be a string.")
         # Raise KeyError: If no slime with that ID exists.
         if slime_id not in self.__experiments:
-            raise KeyError(f"No slime with ID {slime_id!r} found in the laboratory.")
+            raise KeyError(
+                f"No slime with ID {slime_id!r} found in the laboratory.")
         return self.__experiments.pop(slime_id)
 
     def get_slime(self, slime_id) -> Slime:
@@ -64,5 +65,31 @@ class Laboratory:
             raise TypeError("Slime ID must be a string.")
         # Raise KeyError: If no slime with that ID exists.
         if slime_id not in self.__experiments:
-            raise KeyError(f"No slime with ID {slime_id!r} found in the laboratory.")
+            raise KeyError(
+                f"No slime with ID {slime_id!r} found in the laboratory.")
         return self.__experiments[slime_id]
+
+    def interact(self, slime_id_1, slime_id_2) -> str:
+        """Combined volatility determines explosion probability. If no explosion
+        occurs, the slimes replicate instead."""
+        if len(self.__experiments) < 2:
+            raise ValueError("At least 2 slimes are required for an interaction.")
+        slime_1 = self.get_slime(slime_id_1)
+        slime_2 = self.get_slime(slime_id_2)
+
+        combined_volatility = (
+            slime_1.get_volatility_level() + slime_2.get_volatility_level()
+        ) / 20.0
+
+        if random.random() < combined_volatility:
+            return self._explode(slime_1, slime_2) 
+        return self._replicate(slime_1, slime_2)
+
+    def _explode(self, slime_1, slime_2) -> str:
+        # Destroy both slimes and remove them from the laboratory.
+        self.__experiments.pop(slime_1.get_id())
+        self.__experiments.pop(slime_2.get_id())
+        return (
+            f"EXPLOSION! {slime_1.get_name()} ({slime_1.get_id()}) and "
+            f"{slime_2.get_name()} ({slime_2.get_id()}) have been destroyed!"
+        )
