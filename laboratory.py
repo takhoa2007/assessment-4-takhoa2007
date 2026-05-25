@@ -73,7 +73,8 @@ class Laboratory:
         """Combined volatility determines explosion probability. If no explosion
         occurs, the slimes replicate instead."""
         if len(self.__experiments) < 2:
-            raise ValueError("At least 2 slimes are required for an interaction.")
+            raise ValueError(
+                "At least 2 slimes are required for an interaction.")
         slime_1 = self.get_slime(slime_id_1)
         slime_2 = self.get_slime(slime_id_2)
 
@@ -82,7 +83,7 @@ class Laboratory:
         ) / 20.0
 
         if random.random() < combined_volatility:
-            return self._explode(slime_1, slime_2) 
+            return self._explode(slime_1, slime_2)
         return self._replicate(slime_1, slime_2)
 
     def _explode(self, slime_1, slime_2) -> str:
@@ -93,3 +94,32 @@ class Laboratory:
             f"EXPLOSION! {slime_1.get_name()} ({slime_1.get_id()}) and "
             f"{slime_2.get_name()} ({slime_2.get_id()}) have been destroyed!"
         )
+
+    def _replicate(self, slime_1, slime_2) -> str:
+        # Deep copy a randomly chosen parent to create an independent offspring.
+        parent = random.choice([slime_1, slime_2])
+        offspring = copy.deepcopy(parent)
+
+        # Update the name-mangled ID counter and assign a new ID to offspring.
+        Slime._Slime__id_counter += 1
+        offspring._Slime__id = f"SLM-{Slime._Slime__id_counter:03d}"
+
+        self.__experiments[offspring.get_id()] = offspring
+        return (
+            f"REPLICATION! {parent.get_name()} ({parent.get_id()}) produced "
+            f"offspring {offspring.get_name()} ({offspring.get_id()})."
+        )
+
+    def __str__(self) -> str:
+        # Show all slimes grouped by type with their IDs and summaries.
+        if not self.__experiments:
+            return f"=== {self.__name} ===\n  (No slimes currently registered.)"
+
+        lines = [f"=== {self.__name} ==="]
+        lines.append(f"  Total slimes: {len(self.__experiments)}")
+        lines.append("  " + "-" * 50)
+        for slime_id, slime in self.__experiments.items():
+            lines.append(f"  [{type(slime).__name__}] ID: {slime_id}")
+            lines.append(f"    {slime}")
+        lines.append("  " + "-" * 50)
+        return "\n".join(lines)
