@@ -1,4 +1,13 @@
-"""AmberSlime: a resin-encased slime entity that preserves ancient power."""
+"""
+Filename: amber_slime.py
+Description: AmberSlime: A resin-encased slime entity that preserves ancient power.
+Author: Anh Khoa Truong
+AU Username: a1989330
+GitHub Classroom Username: takhoa2007
+
+This is my own work as defined by the Adelaide University's Academic Misconduct Policy.
+"""
+
 from slime import Slime
 
 
@@ -15,9 +24,10 @@ class AmberSlime(Slime):
         # Using setter to validate the input values
         self.set_age_preserved(age_preserved)
         self.set_is_crystallised(is_crystallised)
+        self.calculate_power()
 
     def get_age_preserved(self) -> int:
-        # Return how many year this slime has been preserved.
+        # Return how many years this slime has been preserved.
         return self.__age_preserved
 
     def set_age_preserved(self, age_preserved) -> None:
@@ -48,7 +58,7 @@ class AmberSlime(Slime):
 
         # Energy release pushes the slime to grow, capped at the max size.
         new_size = min(self.get_size() + 10.0, 200.0)
-        self.__size = new_size
+        self.set_size(new_size)
 
         self.calculate_power()
         return (
@@ -58,11 +68,12 @@ class AmberSlime(Slime):
         )
 
     def fossilise(self) -> str:
-        # Harden the amber shell back to a crystallised state. Crystallisation reduces size slightly as the slime compresses, then power is recalculated.
+        """Harden the amber shell back to a crystallised state. 
+        Crystallisation reduces size slightly as the slime compresses, then power is recalculated."""
         self.__is_crystallised = True
 
         new_size = max(self.get_size() - 5.0, 5.0)
-        self.__size = new_size
+        self.set_size(new_size)
 
         self.calculate_power()
         return (

@@ -1,32 +1,30 @@
 """
 Filename: slime.py
-Description: 
+Description: This is an abstract class for whole types of slime.
 Author: Anh Khoa Truong
 AU Username: a1989330
 GitHub Classroom Username: takhoa2007
 
 This is my own work as defined by the Adelaide University's Academic Misconduct Policy.
 """
-""" This is an abstract class for whole types of slime """
-
+import random
 from abc import ABC, abstractmethod
 import math
-import random
 
 
 class Slime(ABC):
-    """Abstract class representing a volatile slime entity """
+    """Abstract class representing a volatile slime entity. """
     # Initial value
     # Class-level counter used generate unique sequential IDS.
     __id_counter = 0
     INITIAL_POWER = 5.0
 
     def __init__(self, name, size):
-        """ Initialise a new Slime with a unique ID and random volatility"""
+        """Initialise a new Slime with a unique ID and random volatility."""
         Slime.__id_counter += 1
         self.__id = f"SLM-{Slime.__id_counter:03d}"
-        self.__name = name
-        self.__size = size
+        self.set_name(name)
+        self.set_size(size)
         self.__volatility_level = random.randint(0, 10)
         self.__power = self.INITIAL_POWER
 
@@ -54,7 +52,7 @@ class Slime(ABC):
         # Raises TypeError: If value is not a numeric type (int or float).
         if not isinstance(size, (int, float)):
             raise TypeError("Must be a numeric value.")
-        # Raise InvalidSizeError: If value is outside the range 5.0–200.0.
+        # Raise ValueError: If value is outside the range 5.0–200.0.
         if not (5.0 <= size <= 200):
             raise ValueError(
                 f"Size must be between 5.0 and 200.0 cm, got {size}.")
@@ -68,7 +66,7 @@ class Slime(ABC):
         # Raise TypeError: If value is not an integer.
         if not isinstance(volatility_level, int):
             raise TypeError("Volatility level must be an integer.")
-        # Raise InvalidVolatilityError: If value is outside the range 0–10.
+        # Raise ValueError: If value is outside the range 0–10.
         if not (0 <= volatility_level <= 10):
             raise ValueError(
                 f"Volatility must be between 0 and 10, got {volatility_level}.")
@@ -121,19 +119,24 @@ class Slime(ABC):
         self.__power = round(power, 2)
         return self.__power
 
-    def _next_id(cls) -> str:
-        """Increment the shared ID counter and return the next formatted slime ID."""
-        cls.__id_counter += 1
-        return f"SLM-{cls.__id_counter:03d}"
+    @classmethod
+    def generate_next_id(cls) -> str:
+        # Generate and return the next unique slime ID.
+        Slime.__id_counter += 1
+        return f"SLM-{Slime.__id_counter:03d}"
 
-    def _reassign_id(self) -> None:
-        """Assign a new unique ID to this slime instance."""
-        self.__id = Slime._next_id()
+    def _assign_new_id(self) -> None:
+        # Regenerate this slime's ID. Used by Laboratory after replication.
+        self.__id = Slime.generate_next_id()
 
     @abstractmethod
     def describe_ability(self):
         pass
 
     def __str__(self):
-        return (f"[{type(self).__name__}] {self.__id} {self.__name} "
-                f"Size: {self.__size:.1f} cm Volatility: {self.__volatility_level} Power: {self.__power:.2f}")
+        return (
+            f"[{type(self).__name__}] {self.__id} {self.__name}\n"
+            f"Size: {self.__size:.1f} cm\n"
+            f"Volatility: {self.__volatility_level}\n"
+            f"Power: {self.__power:.2f}"
+        )

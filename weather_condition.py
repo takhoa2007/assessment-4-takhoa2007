@@ -1,5 +1,12 @@
-"""WeatherCondition: a natural atmospheric phenomenon that fuels StormSlime."""
+"""
+Filename: weather_condition.py
+Description: WeatherCondition: A natural atmospheric phenomenon that fuels StormSlime.
 
+AU Username: a1989330
+GitHub Classroom Username: takhoa2007
+
+This is my own work as defined by the Adelaide University's Academic Misconduct Policy.
+"""
 
 class WeatherCondition:
     """Represents an atmospheric weather event that StormSlime draws power from."""
@@ -64,7 +71,7 @@ class WeatherCondition:
     def __str__(self) -> str:
         active_str = "active" if self.__is_active else "dissipated"
         return (
-            f"[WeatherCondition] Intensity: {self.__storm_intensity}/10 | "
-            f"Charge: {self.__electrical_charge:.1f} kV | "
+            f"[WeatherCondition] Intensity: {self.__storm_intensity}/10\n"
+            f"Charge: {self.__electrical_charge:.1f} kV\n"
             f"Status: {active_str}"
         )

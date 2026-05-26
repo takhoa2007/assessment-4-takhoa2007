@@ -1,4 +1,12 @@
-"""Laboratory: the central hub for managing slime experiments."""
+"""
+Filename: laboratory.py
+Description: Laboratory: the central hub for managing slime experiments.
+Author: Anh Khoa Truong
+AU Username: a1989330
+GitHub Classroom Username: takhoa2007
+
+This is my own work as defined by the Adelaide University's Academic Misconduct Policy.
+"""
 
 import random
 import copy
@@ -31,21 +39,13 @@ class Laboratory:
         return dict(self.__experiments)
     experiments = property(get_experiments)
 
-    def add_slime(self, slime) -> None:
-        """Add an existing Slime to the laboratory."""
-        # Raise TypeError: If slime is not a Slime instance.
-        if not isinstance(slime, Slime):
-            raise TypeError("Only Slime instances can be added.")
-        # Raise ValueError: If a slime with the same ID already exists.
-        if slime.get_id() in self.__experiments:
-            raise ValueError(
-                f"A slime with ID {slime.get_id()!r} already exists in this lab."
-            )
-        self.__experiments[slime.get_id()] = slime
-
     def create_slime(self, slime) -> Slime:
-        """Register a new Slime in the laboratory and return it."""
-        self.add_slime(slime)
+        """Create an existing Slime in the laboratory."""
+        if not isinstance(slime, Slime):
+            raise TypeError("Only Slime instances can be registered.")
+        if slime.get_id() in self.__experiments:
+            raise ValueError(f"Slime ID {slime.get_id()!r} already exists.")
+        self.__experiments[slime.get_id()] = slime
         return slime
 
     def remove_slime(self, slime_id) -> Slime:
@@ -100,11 +100,7 @@ class Laboratory:
         # Deep copy a randomly chosen parent to create an independent offspring
         parent = random.choice([slime_1, slime_2])
         offspring = copy.deepcopy(parent)
-        offspring._reassign_id()
-
-        # Update the name-mangled ID counter and assign a new ID to offspring.
-        Slime._Slime__id_counter += 1
-        offspring._Slime__id = f"SLM-{Slime._Slime__id_counter:03d}"
+        offspring._assign_new_id()
 
         self.__experiments[offspring.get_id()] = offspring
         return (
@@ -120,6 +116,6 @@ class Laboratory:
         result = f"=== {self.__name} ===\n"
         result += f"  Total slimes: {len(self.__experiments)}\n"
         for slime_id, slime in self.__experiments.items():
-            result += f"  [{type(slime).__name__}] {slime_id}\n"
-            result += f"    {slime}\n"
+            indented = str(slime).replace("\n", "\n    ")
+            result += f"    {indented}\n"
         return result.strip()

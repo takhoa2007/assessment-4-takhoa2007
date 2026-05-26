@@ -1,4 +1,13 @@
-"""StormSlime: a lightning-charged slime that absorbs environmental energy."""
+"""StormSlime: A lightning-charged slime that absorbs environmental energy."""
+"""
+Filename: storm_slime.py
+Description: StormSlime: A lightning-charged slime that absorbs environmental energy.
+Author: Anh Khoa Truong
+AU Username: a1989330
+GitHub Classroom Username: takhoa2007
+
+This is my own work as defined by the Adelaide University's Academic Misconduct Policy.
+"""
 
 from slime import Slime
 from weather_condition import WeatherCondition
@@ -16,6 +25,7 @@ class StormSlime(Slime):
         self.set_charge_level(charge_level)
         self.set_is_overcharged(is_overcharged)
         self.set_weather(weather)
+        self.calculate_power()
 
     def get_charge_level(self) -> float:
         return self.__charge_level
@@ -62,7 +72,8 @@ class StormSlime(Slime):
         self.__charge_level += energy
 
         # Higher charge pushes volatility up, capped at 10.
-        volatility_boost = min(int(energy // 20), 10 - self.__volatility_level)
+        volatility_boost = min(int(energy // 20), 10 -
+                               self.get_volatility_level())
         new_volatility = min(
             self.get_volatility_level() + volatility_boost, 10)
         self.set_volatility_level(new_volatility)
@@ -74,22 +85,23 @@ class StormSlime(Slime):
         return (
             f"{self.get_name()} absorbs {energy:.1f} kV from the storm! \n"
             f"Charge: {self.__charge_level:.1f} kV \n"
-            f"Volatility: {self.__volatility_level}\n"
-            f"Power: {self.__power:.2f}."
+            f"Volatility: {self.get_volatility_level()}\n"
+            f"Power: {self.get_power():.2f}."
         )
 
     def discharge(self) -> str:
         # Release half the stored charge to stabilise the slime.
         released = round(self.__charge_level / 2.0, 2)
         self.__charge_level = round(self.__charge_level - released, 2)
-        self.__volatility_level = max(self.__volatility_level - 3, 0)
+        new_volatility = max(self.get_volatility_level() - 3, 0)
+        self.set_volatility_level(new_volatility)
         self.__is_overcharged = False
 
         self.calculate_power()
         return (
             f"{self.get_name()} discharges {released:.1f} kV!\n"
             f"Remaining charge: {self.__charge_level:.1f} kV\n"
-            f"Volatility: {self.__volatility_level} \n"
+            f"Volatility: {self.get_volatility_level()} \n"
             f"Power: {self.get_power():.2f}."
         )
 
