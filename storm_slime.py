@@ -1,4 +1,3 @@
-"""StormSlime: A lightning-charged slime that absorbs environmental energy."""
 """
 Filename: storm_slime.py
 Description: StormSlime: A lightning-charged slime that absorbs environmental energy.
