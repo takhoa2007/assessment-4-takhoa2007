@@ -20,9 +20,9 @@ class WeatherCondition:
     def get_storm_intensity(self) -> int:
         return self.__storm_intensity
 
-    def set_storm_intensity(self, storm_intensity: int) -> None:
+    def set_storm_intensity(self, storm_intensity) -> None:
         # Raise TypeError: If value is not an integer.
-        if not isinstance(storm_intensity, int):
+        if not isinstance(storm_intensity):
             raise TypeError("Storm intensity must be an integer.")
         # Raise ValueError: If value is outside the range 1–10.
         if not (1 <= storm_intensity <= 10):

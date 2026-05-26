@@ -73,18 +73,18 @@ class Slime(ABC):
         self.__volatility_level = volatility_level
     volatility_level = property(get_volatility_level, set_volatility_level)
 
-    def get_power(self):
+    def get_power(self) -> float:
         return self.__power
     power = property(get_power)
 
-    def _get_power_attributes(self):
+    def _get_power_attributes(self) -> dict:
         return {
             "size": self.__size,
             "volatility_level": self.__volatility_level,
             "name": self.__name,
         }
 
-    def calculate_power(self):
+    def calculate_power(self) -> float:
         """Calculate and store power using the formula."""
         attributes = self._get_power_attributes()
         power = self.INITIAL_POWER
@@ -130,10 +130,10 @@ class Slime(ABC):
         self.__id = Slime.generate_next_id()
 
     @abstractmethod
-    def describe_ability(self):
+    def describe_ability(self) -> str:
         pass
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"[{type(self).__name__}] {self.__id} {self.__name}\n"
             f"Size: {self.__size:.1f} cm\n"
