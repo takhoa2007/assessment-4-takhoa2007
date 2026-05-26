@@ -1,6 +1,7 @@
 """Laboratory: the central hub for managing slime experiments."""
 
 import random
+import copy
 from slime import Slime
 
 
@@ -96,9 +97,10 @@ class Laboratory:
         )
 
     def _replicate(self, slime_1, slime_2) -> str:
-        # Deep copy a randomly chosen parent to create an independent offspring.
+        # Deep copy a randomly chosen parent to create an independent offspring
         parent = random.choice([slime_1, slime_2])
         offspring = copy.deepcopy(parent)
+        offspring._reassign_id()
 
         # Update the name-mangled ID counter and assign a new ID to offspring.
         Slime._Slime__id_counter += 1
@@ -111,15 +113,13 @@ class Laboratory:
         )
 
     def __str__(self) -> str:
-        # Show all slimes grouped by type with their IDs and summaries.
+        # Return early if no slimes have been registered yet.
         if not self.__experiments:
-            return f"=== {self.__name} ===\n  (No slimes currently registered.)"
+            return f"=== {self.__name} ===\n  (No slimes registered.)"
 
-        lines = [f"=== {self.__name} ==="]
-        lines.append(f"  Total slimes: {len(self.__experiments)}")
-        lines.append("  " + "-" * 50)
+        result = f"=== {self.__name} ===\n"
+        result += f"  Total slimes: {len(self.__experiments)}\n"
         for slime_id, slime in self.__experiments.items():
-            lines.append(f"  [{type(slime).__name__}] ID: {slime_id}")
-            lines.append(f"    {slime}")
-        lines.append("  " + "-" * 50)
-        return "\n".join(lines)
+            result += f"  [{type(slime).__name__}] {slime_id}\n"
+            result += f"    {slime}\n"
+        return result.strip()

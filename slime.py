@@ -56,7 +56,8 @@ class Slime(ABC):
             raise TypeError("Must be a numeric value.")
         # Raise InvalidSizeError: If value is outside the range 5.0–200.0.
         if not (5.0 <= size <= 200):
-            raise ValueError(f"Size must be between 5.0 and 200.0 cm, got {size}.")
+            raise ValueError(
+                f"Size must be between 5.0 and 200.0 cm, got {size}.")
         self.__size = float(size)
     size = property(get_size, set_size)
 
@@ -69,7 +70,8 @@ class Slime(ABC):
             raise TypeError("Volatility level must be an integer.")
         # Raise InvalidVolatilityError: If value is outside the range 0–10.
         if not (0 <= volatility_level <= 10):
-            raise ValueError(f"Volatility must be between 0 and 10, got {volatility_level}.")
+            raise ValueError(
+                f"Volatility must be between 0 and 10, got {volatility_level}.")
         self.__volatility_level = volatility_level
     volatility_level = property(get_volatility_level, set_volatility_level)
 
@@ -119,10 +121,19 @@ class Slime(ABC):
         self.__power = round(power, 2)
         return self.__power
 
+    def _next_id(cls) -> str:
+        """Increment the shared ID counter and return the next formatted slime ID."""
+        cls.__id_counter += 1
+        return f"SLM-{cls.__id_counter:03d}"
+
+    def _reassign_id(self) -> None:
+        """Assign a new unique ID to this slime instance."""
+        self.__id = Slime._next_id()
+
     @abstractmethod
     def describe_ability(self):
         pass
 
     def __str__(self):
-        return (f"{type(self).__name__}] {self.__id} {self.__name} "
+        return (f"[{type(self).__name__}] {self.__id} {self.__name} "
                 f"Size: {self.__size:.1f} cm Volatility: {self.__volatility_level} Power: {self.__power:.2f}")

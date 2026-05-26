@@ -3,6 +3,7 @@
 from slime import Slime
 from weather_condition import WeatherCondition
 
+
 class StormSlime(Slime):
     """A slime infused with storm energy that interacts with weather events."""
 
@@ -12,9 +13,9 @@ class StormSlime(Slime):
     def __init__(self, name, size, charge_level, is_overcharged=False, weather=None):
         """Initialise a StormSlime with electrical charge properties."""
         super().__init__(name, size)
-        self.__charge_level = charge_level
-        self.__is_overcharged = is_overcharged
-        self.__weather = weather
+        self.set_charge_level(charge_level)
+        self.set_is_overcharged(is_overcharged)
+        self.set_weather(weather)
 
     def get_charge_level(self) -> float:
         return self.__charge_level
@@ -27,6 +28,7 @@ class StormSlime(Slime):
         if charge_level < 0:
             raise ValueError("Charge level must be non-negative.")
         self.__charge_level = float(charge_level)
+    charge_level = property(get_charge_level, set_charge_level)
 
     def get_is_overcharged(self) -> bool:
         return self.__is_overcharged
@@ -43,7 +45,7 @@ class StormSlime(Slime):
 
     def set_weather(self, weather) -> None:
         # Raise TypeError: If value is not a WeatherCondition or None.
-        if weather is not None and not isinstance(weather, WeatherCondition):   
+        if weather is not None and not isinstance(weather, WeatherCondition):
             raise TypeError("weather must be a WeatherCondition or None.")
         self.__weather = weather
     weather = property(get_weather, set_weather)
@@ -61,7 +63,9 @@ class StormSlime(Slime):
 
         # Higher charge pushes volatility up, capped at 10.
         volatility_boost = min(int(energy // 20), 10 - self.__volatility_level)
-        self.__volatility_level = min(self.__volatility_level + volatility_boost, 10)
+        new_volatility = min(
+            self.get_volatility_level() + volatility_boost, 10)
+        self.set_volatility_level(new_volatility)
 
         # Mark overcharged if charge exceeds the safety threshold.
         self.__is_overcharged = self.__charge_level >= self._OVERCHARGE_THRESHOLD
@@ -73,7 +77,7 @@ class StormSlime(Slime):
             f"Volatility: {self.__volatility_level}\n"
             f"Power: {self.__power:.2f}."
         )
-    
+
     def discharge(self) -> str:
         # Release half the stored charge to stabilise the slime.
         released = round(self.__charge_level / 2.0, 2)
@@ -83,21 +87,20 @@ class StormSlime(Slime):
 
         self.calculate_power()
         return (
-            f"{self.__name} discharges {released:.1f} kV!\n"
+            f"{self.get_name()} discharges {released:.1f} kV!\n"
             f"Remaining charge: {self.__charge_level:.1f} kV\n"
             f"Volatility: {self.__volatility_level} \n"
-            f"Power: {self.__power:.2f}."
+            f"Power: {self.get_power():.2f}."
         )
-
 
     def describe_ability(self) -> str:
         # Describe StormSlime's charge state including overcharge warning.
         if self.__is_overcharged:
-            overcharge_str = " OVERCHARGED!" 
-        else: 
+            overcharge_str = " OVERCHARGED!"
+        else:
             overcharge_str = ""
         return (
-            f"{self._name} crackles with {self.__charge_level:.1f} kV of "
+            f"{self.get_name()} crackles with {self.__charge_level:.1f} kV of "
             f"stored lightning energy.{overcharge_str}"
         )
 

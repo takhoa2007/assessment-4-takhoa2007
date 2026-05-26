@@ -2,7 +2,7 @@
 from slime import Slime
 
 
-class Amber(Slime):
+class AmberSlime(Slime):
     """A slime encased in hardened amber resin with preserved fossil energy.
 
      AmberSlime stores ancient energy inside its amber shell. The older
@@ -48,7 +48,7 @@ class Amber(Slime):
 
         # Energy release pushes the slime to grow, capped at the max size.
         new_size = min(self.get_size() + 10.0, 200.0)
-        self._size = new_size
+        self.__size = new_size
 
         self.calculate_power()
         return (
@@ -62,7 +62,7 @@ class Amber(Slime):
         self.__is_crystallised = True
 
         new_size = max(self.get_size() - 5.0, 5.0)
-        self._size = new_size
+        self.__size = new_size
 
         self.calculate_power()
         return (
