@@ -1,7 +1,7 @@
 """
 Filename: weather_condition.py
 Description: WeatherCondition: A natural atmospheric phenomenon that fuels StormSlime.
-
+Author: Anh Khoa Truong
 AU Username: a1989330
 GitHub Classroom Username: takhoa2007
 
@@ -22,7 +22,7 @@ class WeatherCondition:
 
     def set_storm_intensity(self, storm_intensity) -> None:
         # Raise TypeError: If value is not an integer.
-        if not isinstance(storm_intensity):
+        if not isinstance(storm_intensity, int):
             raise TypeError("Storm intensity must be an integer.")
         # Raise ValueError: If value is outside the range 1–10.
         if not (1 <= storm_intensity <= 10):
@@ -66,10 +66,13 @@ class WeatherCondition:
     def dissipate(self) -> str:
         # Deactivate this weather condition as the storm passes.
         self.__is_active = False
-        return "The storm dissipates. Electrical charge fades to zero."
+        return "The storm dissipates. The weather event is now inactive."
 
     def __str__(self) -> str:
-        active_str = "active" if self.__is_active else "dissipated"
+        if self.__is_active:
+            active_str = "active"
+        else:
+            active_str = "dissipated"
         return (
             f"[WeatherCondition] Intensity: {self.__storm_intensity}/10\n"
             f"Charge: {self.__electrical_charge:.1f} kV\n"

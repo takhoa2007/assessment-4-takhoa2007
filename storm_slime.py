@@ -16,7 +16,7 @@ class StormSlime(Slime):
     """A slime infused with storm energy that interacts with weather events."""
 
     INITIAL_POWER = 6.0
-    _OVERCHARGE_THRESHOLD = 100.0
+    OVERCHARGE_THRESHOLD = 100.0
 
     def __init__(self, name, size, charge_level, is_overcharged=False, weather=None):
         """Initialise a StormSlime with electrical charge properties."""
@@ -73,12 +73,11 @@ class StormSlime(Slime):
         # Higher charge pushes volatility up, capped at 10.
         volatility_boost = min(int(energy // 20), 10 -
                                self.get_volatility_level())
-        new_volatility = min(
-            self.get_volatility_level() + volatility_boost, 10)
+        new_volatility = self.get_volatility_level() + volatility_boost
         self.set_volatility_level(new_volatility)
 
         # Mark overcharged if charge exceeds the safety threshold.
-        self.__is_overcharged = self.__charge_level >= self._OVERCHARGE_THRESHOLD
+        self.__is_overcharged = self.__charge_level >= self.OVERCHARGE_THRESHOLD
 
         self.calculate_power()
         return (
@@ -126,7 +125,10 @@ class StormSlime(Slime):
 
     def __str__(self) -> str:
         # Extends the base slime summary with StormSlime-specific fields.
-        overcharge_str = "YES" if self.__is_overcharged else "NO"
+        if self.__is_overcharged:
+            overcharge_str = "YES"
+        else:
+            overcharge_str = "NO"
         if self.__weather:
             weather_str = f"Storm: {self.__weather.get_storm_intensity()}/10"
         else:

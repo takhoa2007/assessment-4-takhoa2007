@@ -21,7 +21,7 @@ class AmberSlime(Slime):
 
     def __init__(self, name, size, age_preserved, is_crystallised):
         super().__init__(name, size)
-        # Using setter to validate the input values
+        # Using setter to validate the input values.
         self.set_age_preserved(age_preserved)
         self.set_is_crystallised(is_crystallised)
         self.calculate_power()
@@ -53,7 +53,9 @@ class AmberSlime(Slime):
     is_crystallised = property(get_is_crystallised, set_is_crystallised)
 
     def crack_resin(self) -> str:
-        """Crack the amber shell to release stored energy.When cracked, the slime is no longer crystallised, its size grows slightly from the energy release, and power is recalculated."""
+        """Crack the amber shell to release stored energy.
+        When cracked, the slime is no longer crystallised.
+        its size grows slightly from the energy release, and power is recalculated."""
         self.__is_crystallised = False
 
         # Energy release pushes the slime to grow, capped at the max size.
@@ -83,7 +85,7 @@ class AmberSlime(Slime):
         )
 
     def describe_ability(self) -> str:
-        # Returns of the slime's aura based on its current shell state.
+        # Returns the slime's aura based on its current shell state.
         if self.__is_crystallised:
             state = "crystallised"
         else:

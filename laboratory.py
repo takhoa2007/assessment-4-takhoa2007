@@ -39,7 +39,8 @@ class Laboratory:
         return dict(self.__experiments)
     experiments = property(get_experiments)
 
-    def create_slime(self, slime) -> Slime:
+
+    def add_slime(self, slime) -> Slime:
         """Create an existing Slime in the laboratory."""
         if not isinstance(slime, Slime):
             raise TypeError("Only Slime instances can be registered.")
