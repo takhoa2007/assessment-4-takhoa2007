@@ -1,11 +1,7 @@
 ### `class_diagram`
 
 Add your associated class diagram files here.
-
-Recommended file types:
-- `.pdf`
-- `.png`
-
+![Project UML](<Project UML.png>)
 ---
 
 ### `self_evaluation`
