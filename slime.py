@@ -13,8 +13,8 @@ import math
 
 
 class Slime(ABC):
-    """Abstract class representing a volatile slime entity. """
-    # Initial value
+    """Abstract class representing a volatile slime entity."""
+    # Initial values are created here.
     # Class-level counter used to generate unique sequential IDs.
     __id_counter = 0
     INITIAL_POWER = 5.0
@@ -43,7 +43,6 @@ class Slime(ABC):
         if not name.strip():
             raise ValueError("Name must not be empty.")
         self.__name = name
-        self.calculate_power()
     name = property(get_name, set_name)
 
     def get_size(self) -> float:
@@ -57,7 +56,6 @@ class Slime(ABC):
         if not (5.0 <= size <= 200):
             raise ValueError(
                 f"Size must be between 5.0 and 200.0 cm, got {size}.")
-        self.calculate_power()
         self.__size = float(size)
     size = property(get_size, set_size)
 

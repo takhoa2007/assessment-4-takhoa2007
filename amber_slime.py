@@ -14,7 +14,7 @@ from slime import Slime
 class AmberSlime(Slime):
     """A slime encased in hardened amber resin with preserved fossil energy.
 
-     AmberSlime stores ancient energy inside its amber shell. The older
+    AmberSlime stores ancient energy inside its amber shell. The older
     the preserved specimen (age_preserved), the more power it has. When
     its resin cracks, it releases ancient energy."""
     INITIAL_POWER = 8.0
@@ -55,7 +55,7 @@ class AmberSlime(Slime):
     def crack_resin(self) -> str:
         """Crack the amber shell to release stored energy.
         When cracked, the slime is no longer crystallised.
-        its size grows slightly from the energy release, and power is recalculated."""
+        Its size grows slightly from the energy release, and power is recalculated."""
         self.__is_crystallised = False
 
         # Energy release pushes the slime to grow, capped at the max size.
@@ -70,8 +70,9 @@ class AmberSlime(Slime):
         )
 
     def fossilise(self) -> str:
-        """Harden the amber shell back to a crystallised state. 
-        Crystallisation reduces size slightly as the slime compresses, then power is recalculated."""
+        """Harden the amber shell back to a crystallised state.
+        Crystallisation reduces size slightly as the slime compresses.
+        The power is recalculated."""
         self.__is_crystallised = True
 
         new_size = max(self.get_size() - 5.0, 5.0)

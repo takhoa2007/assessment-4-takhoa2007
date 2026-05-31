@@ -8,6 +8,7 @@ GitHub Classroom Username: takhoa2007
 This is my own work as defined by the Adelaide University's Academic Misconduct Policy.
 """
 
+
 class WeatherCondition:
     """Represents an atmospheric weather event that StormSlime draws power from."""
 

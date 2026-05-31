@@ -11,6 +11,9 @@ This is my own work as defined by the Adelaide University's Academic Misconduct 
 import random
 import copy
 from slime import Slime
+from amber_slime import AmberSlime
+from storm_slime import StormSlime
+from weather_condition import WeatherCondition
 
 
 class Laboratory:
@@ -39,14 +42,47 @@ class Laboratory:
         return dict(self.__experiments)
     experiments = property(get_experiments)
 
+    def create_amber_slime(self, name, size,
+                           age_preserved, is_crystallised=False,) -> AmberSlime:
+        # Create an AmberSlime, register it, and return it.
+        try:
+            slime = AmberSlime(name, size, age_preserved, is_crystallised)
+            self.__register_slime(slime)
+            return slime
+        except Exception as error:
+            print(f"Construction error: {error}")
 
-    def add_slime(self, slime) -> Slime:
-        """Create an existing Slime in the laboratory."""
-        if not isinstance(slime, Slime):
-            raise TypeError("Only Slime instances can be registered.")
+    def create_weather_condition(self, storm_intensity,
+                                 electrical_charge, is_active=True) -> WeatherCondition:
+        """Create and return a WeatherCondition for linking to a StormSlime."""
+        try:
+            return WeatherCondition(storm_intensity, electrical_charge, is_active)
+        except Exception as error:
+            print(f"Construction error: {error}")
+
+    def create_storm_slime(self, name, size, charge_level,
+                           is_overcharged=False, weather=None,) -> StormSlime:
+        """Create a StormSlime, register it, and return it."""
+        try:
+            slime = StormSlime(name, size, charge_level,
+                               is_overcharged, weather)
+            self.__register_slime(slime)
+            return slime
+        except Exception as error:
+            print(f"Construction error: {error}")
+
+    def __register_slime(self, slime: Slime) -> None:
+        # Add a fully constructed slime to the experiments dictionary.
         if slime.get_id() in self.__experiments:
+            # Raises ValueError: If a slime with the same ID already exists.
             raise ValueError(f"Slime ID {slime.get_id()!r} already exists.")
         self.__experiments[slime.get_id()] = slime
+
+    def add_slime(self, slime: Slime) -> Slime:
+        """Register a pre-existing Slime instance in the laboratory."""
+        if not isinstance(slime, Slime):
+            raise TypeError("Only Slime instances can be registered.")
+        self.__register_slime(slime)
         return slime
 
     def remove_slime(self, slime_id) -> Slime:
@@ -74,6 +110,9 @@ class Laboratory:
     def interact(self, slime_id_1, slime_id_2) -> str:
         """Combined volatility determines explosion probability. If no explosion
         occurs, the slimes replicate instead."""
+        if slime_id_1 == slime_id_2:
+            raise ValueError("A slime cannot interact with itself.")
+
         if len(self.__experiments) < 2:
             raise ValueError(
                 "At least 2 slimes are required for an interaction.")
@@ -98,7 +137,7 @@ class Laboratory:
         )
 
     def _replicate(self, slime_1, slime_2) -> str:
-        # Deep copy a randomly chosen parent to create an independent offspring
+        # Deep copy a randomly chosen parent to create an independent offspring.
         parent = random.choice([slime_1, slime_2])
         offspring = copy.deepcopy(parent)
         offspring._assign_new_id()
